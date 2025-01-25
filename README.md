@@ -15,6 +15,14 @@ A Flutter package for creating a mesmerizing, animated fluid-like background wit
 
 ---
 
+## Gifs 🖼️
+
+| Example White                           | Example Black                           |
+|-----------------------------------------|-----------------------------------------|
+| ![Example White](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExODFhN2IzYWN3M3MyMjNhZTBnemUwbXZ0Y3d1ZXppM3k2bDc4OHRlaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iiNCNs2Hr9kArZsmdT/giphy.gif) | ![Example Black](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWFpODNleHN3MW1idTF4OHRvMTgycHBndTl2Y2gwdm05ZDdid3RreCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LU1xX7ygMrBnqrzQiz/giphy.gif) |
+
+---
+
 ## Installation 📦
 
 Add the following line to your `pubspec.yaml` file:
@@ -105,14 +113,6 @@ FluidBackground(
 ## Example App 📱
 
 Check out the full example in the [example/](example/) directory for more usage scenarios.
-
----
-
-## Screenshots 🖼️
-
-| Example 1                                | Example 2                                |
-|-----------------------------------------|-----------------------------------------|
-| ![Example White](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExODFhN2IzYWN3M3MyMjNhZTBnemUwbXZ0Y3d1ZXppM3k2bDc4OHRlaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iiNCNs2Hr9kArZsmdT/giphy.gif) | ![Example Black](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWFpODNleHN3MW1idTF4OHRvMTgycHBndTl2Y2gwdm05ZDdid3RreCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LU1xX7ygMrBnqrzQiz/giphy.gif) |
 
 ---
 

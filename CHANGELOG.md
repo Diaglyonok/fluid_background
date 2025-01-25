@@ -1,3 +1,9 @@
-## 1.0.0
+## [1.0.1] - 2025-01-25
+### Fixed
+- README.md
 
-* TODO: Describe initial release.
+## [1.0.0] - 2025-01-25
+### Added
+- Initial release of the `fluid_background` package.
+- Support for customizable bubble colors, positions, and animations.
+- Blur effect integration for a dynamic and modern background.
