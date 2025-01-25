@@ -1,6 +1,6 @@
 name: fluid_background
 description: "Create stunning fluid backgrounds with procedure-animated colorful bubbles and built-in blur effects for a dynamic and modern UI"
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/Diaglyonok/fluid_background
 
 environment:
