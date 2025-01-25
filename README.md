@@ -18,7 +18,7 @@ A Flutter package for creating a mesmerizing, animated fluid-like background wit
 ## Gifs 🖼️
 
 | Example White                           | Example Black                           | Example Cropped                           |
-|-----------------------------------------|-----------------------------------------|
+|-----------------------------------------|-----------------------------------------|-----------------------------------------|
 | ![Example White](https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExODFhN2IzYWN3M3MyMjNhZTBnemUwbXZ0Y3d1ZXppM3k2bDc4OHRlaSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iiNCNs2Hr9kArZsmdT/giphy.gif) | ![Example Black](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWFpODNleHN3MW1idTF4OHRvMTgycHBndTl2Y2gwdm05ZDdid3RreCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LU1xX7ygMrBnqrzQiz/giphy.gif) | ![Example Cropped](https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMGQyNjI1d3FpZWU5bTg1NWVsbHRrZnYybndkYXM1ZWN4eXQwcTYyOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/qrmGrjRNUXHZCwQOxH/giphy.gif) |
 
 ---
