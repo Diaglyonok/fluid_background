@@ -14,8 +14,8 @@ class InitialColors {
         ],
       );
 
-  factory InitialColors.random(int ballsNum) {
-    return InitialColors._(generateColors(ballsNum), isRandom: true);
+  factory InitialColors.random(int bubblesNum) {
+    return InitialColors._(generateColors(bubblesNum), isRandom: true);
   }
 
   factory InitialColors.custom(List<Color> colors) {

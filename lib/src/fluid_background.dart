@@ -5,12 +5,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import 'generators.dart';
-import 'models/ball.dart';
+import 'models/bubble.dart';
 import 'models/initial_colors.dart';
 import 'models/initial_offsets.dart';
 
 class FluidBackground extends StatefulWidget {
-  /// Initial Positions (Offsets) of every ball:
+  /// Initial Positions (Offsets) of every bubble:
   /// 1. Could be [InitialOffsets.custom]
   ///    So you could set your own positions list
   ///
@@ -42,23 +42,23 @@ class FluidBackground extends StatefulWidget {
   /// If it's null, there won't be any size or color animation
   ///
   /// Important: Color animation only works with initialColors: [InitialColors.random]
-  final Duration? ballMutationDuration;
+  final Duration? bubbleMutationDuration;
 
-  /// Range of sizes to animate balls during [ballMutationDuration]
+  /// Range of sizes to animate bubbles during [bubbleMutationDuration]
   /// Only first and last values are matte).
   ///
-  /// Important: Range should be in: [sizeChangingRange.first] <= [ballsSize] <= [sizeChangingRange.last]
+  /// Important: Range should be in: [sizeChangingRange.first] <= [bubblesSize] <= [sizeChangingRange.last]
   final List<double>? sizeChangingRange;
 
   /// Flag restricts color changing animation for [InitialColors.random]
   /// Default value = false
   final bool allowColorChanging;
 
-  /// Ball size (diameter)
+  /// Bubble size (diameter)
   /// Default value = 400
-  final double ballsSize;
+  final double bubblesSize;
 
-  /// Balls' velocity
+  /// Bubbles' velocity
   /// Default value = 120
   final double velocity;
 
@@ -76,8 +76,8 @@ class FluidBackground extends StatefulWidget {
     super.key,
     required this.initialPositions,
     required this.initialColors,
-    this.ballMutationDuration,
-    this.ballsSize = 400,
+    this.bubbleMutationDuration,
+    this.bubblesSize = 400,
     this.velocity = 120,
     this.sizeChangingRange,
     this.allowColorChanging = false,
@@ -86,8 +86,8 @@ class FluidBackground extends StatefulWidget {
   })  : assert(initialPositions.offsets.length == initialColors.colors.length),
         assert(sizeChangingRange == null ||
             sizeChangingRange.length == 2 &&
-                sizeChangingRange.first <= ballsSize &&
-                sizeChangingRange.last >= ballsSize);
+                sizeChangingRange.first <= bubblesSize &&
+                sizeChangingRange.last >= bubblesSize);
 
   @override
   State<FluidBackground> createState() => _FluidBackgroundState();
@@ -99,15 +99,15 @@ class _FluidBackgroundState extends State<FluidBackground> with TickerProviderSt
   final ValueNotifier<String> uniqueStateNotifier = ValueNotifier<String>('init');
 
   late Timer mutationTimer;
-  late List<Ball> _balls = [];
+  late List<Bubble> _bubbles = [];
   bool initted = false;
 
   List<Offset> get initialOffsets => widget.initialPositions.offsets;
 
   @override
   void initState() {
-    if (widget.ballMutationDuration != null) {
-      mutationTimer = createTimer(widget.ballMutationDuration!);
+    if (widget.bubbleMutationDuration != null) {
+      mutationTimer = createTimer(widget.bubbleMutationDuration!);
     }
 
     if (widget.size != null) {
@@ -129,7 +129,7 @@ class _FluidBackgroundState extends State<FluidBackground> with TickerProviderSt
     }
 
     initted = true;
-    _balls = [];
+    _bubbles = [];
 
     for (int i = 0; i < initialOffsets.length; i++) {
       final newPoint = Offset(_random.nextDouble(), _random.nextDouble());
@@ -144,7 +144,7 @@ class _FluidBackgroundState extends State<FluidBackground> with TickerProviderSt
         duration: t,
       );
 
-      final ball = Ball(
+      final bubble = Bubble(
         Tween<Offset>(
           begin: initialOffsets[i],
           end: newPoint,
@@ -156,9 +156,9 @@ class _FluidBackgroundState extends State<FluidBackground> with TickerProviderSt
         ),
         controller,
         widget.initialColors.colors[i],
-        widget.ballsSize,
+        widget.bubblesSize,
       );
-      _balls.add(ball);
+      _bubbles.add(bubble);
 
       uniqueStateNotifier.value = _random.nextInt(10000).toString();
 
@@ -167,36 +167,36 @@ class _FluidBackgroundState extends State<FluidBackground> with TickerProviderSt
         if (controller.isCompleted) {
           final size = widget.size ?? (_parentKey.currentContext?.findRenderObject() as RenderBox).size;
           final newPoint = Offset(_random.nextDouble(), _random.nextDouble());
-          final last = ball.animation.value;
+          final last = bubble.animation.value;
 
           // Calculating duration
           final s = (calculatePathLength(last, newPoint, size.width, size.height));
           final v = widget.velocity;
-          ball.controller.duration = Duration(seconds: (s / v).toInt());
+          bubble.controller.duration = Duration(seconds: (s / v).toInt());
 
-          ball.animation = Tween<Offset>(
+          bubble.animation = Tween<Offset>(
             begin: last,
             end: newPoint,
           ).animate(
             CurvedAnimation(
-              parent: ball.controller,
+              parent: bubble.controller,
               curve: Curves.easeInOut,
             ),
           );
 
           //Motion restart
-          ball.controller.forward(from: 0.0);
+          bubble.controller.forward(from: 0.0);
         }
       });
 
       //First motion start
-      ball.controller.forward(from: 0.0);
+      bubble.controller.forward(from: 0.0);
     }
   }
 
   @override
   void dispose() {
-    for (var element in _balls) {
+    for (var element in _bubbles) {
       element.controller.dispose();
     }
     mutationTimer.cancel();
@@ -204,34 +204,34 @@ class _FluidBackgroundState extends State<FluidBackground> with TickerProviderSt
     super.dispose();
   }
 
-  /// Used to restart changing colors and size of balls
+  /// Used to restart changing colors and size of bubbles
   Timer createTimer(Duration duration) {
     return Timer(
       duration,
       () {
         mutationTimer.cancel();
         _mutationFunc();
-        if (widget.ballMutationDuration != null) {
-          mutationTimer = createTimer(widget.ballMutationDuration!);
+        if (widget.bubbleMutationDuration != null) {
+          mutationTimer = createTimer(widget.bubbleMutationDuration!);
         }
       },
     );
   }
 
-  /// Used to change colors and size of balls
+  /// Used to change colors and size of bubbles
   _mutationFunc() {
-    final colors = generateColors(_balls.length);
+    final colors = generateColors(_bubbles.length);
 
-    for (int i = 0; i < _balls.length; i++) {
-      if (widget.ballMutationDuration != null && widget.initialColors.isRandom && widget.allowColorChanging) {
-        _balls[i].color = colors[i];
+    for (int i = 0; i < _bubbles.length; i++) {
+      if (widget.bubbleMutationDuration != null && widget.initialColors.isRandom && widget.allowColorChanging) {
+        _bubbles[i].color = colors[i];
       }
 
-      if (widget.ballMutationDuration != null && widget.sizeChangingRange != null) {
+      if (widget.bubbleMutationDuration != null && widget.sizeChangingRange != null) {
         final newSize = widget.sizeChangingRange!.first +
             _random.nextDouble() * (widget.sizeChangingRange!.last - widget.sizeChangingRange!.first);
 
-        _balls[i].size = newSize;
+        _bubbles[i].size = newSize;
       }
 
       uniqueStateNotifier.value = _random.nextInt(10000).toString();
@@ -253,26 +253,26 @@ class _FluidBackgroundState extends State<FluidBackground> with TickerProviderSt
             builder: (context, _, child) {
               return Stack(
                 children: [
-                  for (var ball in _balls)
+                  for (var bubble in _bubbles)
                     AnimatedBuilder(
-                      animation: ball.animation,
+                      animation: bubble.animation,
                       builder: (context, child) {
                         double screenHeight = height;
                         double screenWidth = width;
 
                         return Transform.translate(
-                          offset: Offset(xFunc(ball.animation.value.dx, screenWidth) - widget.ballsSize / 2,
-                              yFunc(ball.animation.value.dy, screenHeight) - widget.ballsSize / 2),
+                          offset: Offset(xFunc(bubble.animation.value.dx, screenWidth) - widget.bubblesSize / 2,
+                              yFunc(bubble.animation.value.dy, screenHeight) - widget.bubblesSize / 2),
                           child: AnimatedContainer(
-                            duration: widget.ballMutationDuration ?? Duration.zero,
-                            width: ball.size,
-                            height: ball.size,
+                            duration: widget.bubbleMutationDuration ?? Duration.zero,
+                            width: bubble.size,
+                            height: bubble.size,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               gradient: RadialGradient(
                                 colors: [
-                                  ball.color,
-                                  ball.color.withOpacity(0),
+                                  bubble.color,
+                                  bubble.color.withOpacity(0),
                                 ],
                                 stops: const [0.0, 1.0],
                                 center: Alignment.center,
