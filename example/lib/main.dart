@@ -28,11 +28,12 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Center(
         child: FluidBackground(
           initialColors: InitialColors.random(4),
           initialPositions: InitialOffsets.predefined(),
-          velocity: 80,
+          velocity: 100,
           bubblesSize: 400,
           sizeChangingRange: const [300, 600],
           allowColorChanging: true,
