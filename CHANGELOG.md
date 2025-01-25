@@ -1,3 +1,9 @@
+## [1.0.2] - 2025-01-25
+### Added
+- Added blur adjustments
+### Fixed
+- README.md
+
 ## [1.0.1] - 2025-01-25
 ### Fixed
 - README.md

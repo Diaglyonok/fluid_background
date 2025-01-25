@@ -72,6 +72,9 @@ class FluidBackground extends StatefulWidget {
   /// Could be just a [SizedBox] if you don't need a child widget.
   final Widget child;
 
+  /// Use it if you want to change blur settings.
+  final ImageFilter? customImageFilter;
+
   FluidBackground({
     super.key,
     required this.initialPositions,
@@ -82,6 +85,7 @@ class FluidBackground extends StatefulWidget {
     this.sizeChangingRange,
     this.allowColorChanging = false,
     this.size,
+    this.customImageFilter,
     required this.child,
   })  : assert(initialPositions.offsets.length == initialColors.colors.length),
         assert(sizeChangingRange == null ||
@@ -289,10 +293,11 @@ class _FluidBackgroundState extends State<FluidBackground> with TickerProviderSt
             },
             child: ClipRRect(
               child: BackdropFilter(
-                filter: ImageFilter.blur(
-                  sigmaX: 100.0,
-                  sigmaY: 100.0,
-                ),
+                filter: widget.customImageFilter ??
+                    ImageFilter.blur(
+                      sigmaX: 100.0,
+                      sigmaY: 100.0,
+                    ),
                 child: SizedBox(
                   width: width,
                   height: height,

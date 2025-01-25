@@ -28,7 +28,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: Center(
         child: FluidBackground(
           initialColors: InitialColors.random(4),
@@ -38,6 +38,7 @@ class _ExampleHomePageState extends State<ExampleHomePage> {
           sizeChangingRange: const [300, 600],
           allowColorChanging: true,
           bubbleMutationDuration: const Duration(seconds: 4),
+          size: const Size(300, 300),
           child: const SizedBox(),
         ),
       ),
