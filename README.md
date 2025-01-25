@@ -124,7 +124,7 @@ Contributions are welcome! If you find a bug or have a feature request, feel fre
 
 ## License 📝
 
-This package is distributed under the [MIT License](LICENSE).
+This package is distributed under the [Apache 2.0 License].
 
 ---
 
