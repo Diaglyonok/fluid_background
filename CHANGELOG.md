@@ -1,3 +1,7 @@
+## [1.0.5] - 2025-06-11
+### Fixed
+- Controller reassign state fix
+
 ## [1.0.4] - 2025-06-11
 ### Fixed
 - Made controller not required
