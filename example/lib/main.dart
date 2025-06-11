@@ -25,21 +25,29 @@ class ExampleHomePage extends StatefulWidget {
 }
 
 class _ExampleHomePageState extends State<ExampleHomePage> {
+  final controller = FluidBackgroundController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: FluidBackground(
-          initialColors: InitialColors.random(4),
-          initialPositions: InitialOffsets.predefined(),
-          velocity: 100,
-          bubblesSize: 400,
-          sizeChangingRange: const [300, 600],
-          allowColorChanging: true,
-          bubbleMutationDuration: const Duration(seconds: 4),
-          size: const Size(300, 300),
-          child: const SizedBox(),
+      body: GestureDetector(
+        onTap: () {
+          controller.mutateToColors(InitialColors.random(4).colors);
+        },
+        child: Center(
+          child: FluidBackground(
+            controller: controller,
+            initialColors: InitialColors.random(4),
+            initialPositions: InitialOffsets.predefined(),
+            velocity: 100,
+            bubblesSize: 400,
+            sizeChangingRange: const [300, 600],
+            allowColorChanging: false,
+            bubbleMutationDuration: const Duration(seconds: 4),
+            size: const Size(300, 300),
+            child: const SizedBox(),
+          ),
         ),
       ),
     );

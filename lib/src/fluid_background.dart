@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as dev;
 import 'dart:math';
 import 'dart:ui';
 
@@ -8,6 +9,8 @@ import 'generators.dart';
 import 'models/bubble.dart';
 import 'models/initial_colors.dart';
 import 'models/initial_offsets.dart';
+
+part 'fluid_background_controller.dart';
 
 class FluidBackground extends StatefulWidget {
   /// Initial Positions (Offsets) of every bubble:
@@ -75,6 +78,10 @@ class FluidBackground extends StatefulWidget {
   /// Use it if you want to change blur settings.
   final ImageFilter? customImageFilter;
 
+  /// Use it to mutate from one color set to other color set
+  /// Important: Number of colors should be the same as [initialColors] length
+  final FluidBackgroundController? controller;
+
   FluidBackground({
     super.key,
     required this.initialPositions,
@@ -87,6 +94,7 @@ class FluidBackground extends StatefulWidget {
     this.size,
     this.customImageFilter,
     required this.child,
+    required this.controller,
   })  : assert(initialPositions.offsets.length == initialColors.colors.length),
         assert(sizeChangingRange == null ||
             sizeChangingRange.length == 2 &&
@@ -108,8 +116,23 @@ class _FluidBackgroundState extends State<FluidBackground> with TickerProviderSt
 
   List<Offset> get initialOffsets => widget.initialPositions.offsets;
 
+  void mergeToColors(List<Color> colors) {
+    if (colors.length != widget.initialColors.colors.length) {
+      dev.log("FluidBackground: mutation bubles length not equal to initial colors length");
+      return;
+    }
+
+    for (int i = 0; i < _bubbles.length; i++) {
+      _bubbles[i].color = colors[i];
+    }
+  }
+
   @override
   void initState() {
+    if (widget.controller != null) {
+      widget.controller!._register(this);
+    }
+
     if (widget.bubbleMutationDuration != null) {
       mutationTimer = createTimer(widget.bubbleMutationDuration!);
     }
@@ -118,8 +141,15 @@ class _FluidBackgroundState extends State<FluidBackground> with TickerProviderSt
       _init(widget.size!);
     } else {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        final renderBox = _parentKey.currentContext?.findRenderObject() as RenderBox;
-        _init(renderBox.size);
+        if (!mounted) {
+          return;
+        }
+        try {
+          final renderBox = _parentKey.currentContext?.findRenderObject() as RenderBox;
+          _init(renderBox.size);
+        } catch (e) {
+          dev.log("FluidBackground: Something went wrong with size calculation", error: e);
+        }
       });
     }
 
@@ -169,7 +199,8 @@ class _FluidBackgroundState extends State<FluidBackground> with TickerProviderSt
       controller.addListener(() {
         //Full motion restart after last movement
         if (controller.isCompleted) {
-          final size = widget.size ?? (_parentKey.currentContext?.findRenderObject() as RenderBox).size;
+          final size =
+              widget.size ?? (_parentKey.currentContext?.findRenderObject() as RenderBox).size;
           final newPoint = Offset(_random.nextDouble(), _random.nextDouble());
           final last = bubble.animation.value;
 
@@ -227,13 +258,16 @@ class _FluidBackgroundState extends State<FluidBackground> with TickerProviderSt
     final colors = generateColors(_bubbles.length);
 
     for (int i = 0; i < _bubbles.length; i++) {
-      if (widget.bubbleMutationDuration != null && widget.initialColors.isRandom && widget.allowColorChanging) {
+      if (widget.bubbleMutationDuration != null &&
+          widget.initialColors.isRandom &&
+          widget.allowColorChanging) {
         _bubbles[i].color = colors[i];
       }
 
       if (widget.bubbleMutationDuration != null && widget.sizeChangingRange != null) {
         final newSize = widget.sizeChangingRange!.first +
-            _random.nextDouble() * (widget.sizeChangingRange!.last - widget.sizeChangingRange!.first);
+            _random.nextDouble() *
+                (widget.sizeChangingRange!.last - widget.sizeChangingRange!.first);
 
         _bubbles[i].size = newSize;
       }
@@ -265,8 +299,11 @@ class _FluidBackgroundState extends State<FluidBackground> with TickerProviderSt
                         double screenWidth = width;
 
                         return Transform.translate(
-                          offset: Offset(xFunc(bubble.animation.value.dx, screenWidth) - widget.bubblesSize / 2,
-                              yFunc(bubble.animation.value.dy, screenHeight) - widget.bubblesSize / 2),
+                          offset: Offset(
+                              xFunc(bubble.animation.value.dx, screenWidth) -
+                                  widget.bubblesSize / 2,
+                              yFunc(bubble.animation.value.dy, screenHeight) -
+                                  widget.bubblesSize / 2),
                           child: AnimatedContainer(
                             duration: widget.bubbleMutationDuration ?? Duration.zero,
                             width: bubble.size,
