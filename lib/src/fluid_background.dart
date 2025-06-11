@@ -86,6 +86,7 @@ class FluidBackground extends StatefulWidget {
     super.key,
     required this.initialPositions,
     required this.initialColors,
+    required this.child,
     this.bubbleMutationDuration,
     this.bubblesSize = 400,
     this.velocity = 120,
@@ -93,8 +94,7 @@ class FluidBackground extends StatefulWidget {
     this.allowColorChanging = false,
     this.size,
     this.customImageFilter,
-    required this.child,
-    required this.controller,
+    this.controller,
   })  : assert(initialPositions.offsets.length == initialColors.colors.length),
         assert(sizeChangingRange == null ||
             sizeChangingRange.length == 2 &&

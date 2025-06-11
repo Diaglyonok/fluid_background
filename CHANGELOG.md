@@ -1,3 +1,7 @@
+## [1.0.4] - 2025-06-11
+### Fixed
+- Made controller not required
+
 ## [1.0.3] - 2025-06-11
 ### Added
 - Added controller, that allows colors mutations
